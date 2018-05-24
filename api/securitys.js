@@ -46,24 +46,16 @@ routes.post('/securitys', function (req, res) {
 });
 
 
-routes.put('/securitys/:id', function (req, res) {
+routes.put('/securitys/:id', (req, res, next) => {
+    const securityId = req.params.id;
+    const securityProps = req.body;
 
-    const b= req.body;
-
-    const security = new Security({
-        name: b.name,
-        date : b.date,
-        description : b.description,
-    });
-    Security.findOneAndUpdate({ _id: security._id }, { $set: {
-        name: b.name,
-        date : b.date,
-        description : b.description,
-    }}).then(() => res.status(200).json(Security))
-    .catch((error) => {
-        res.status(400).json(error);
-    });
-
+    Recipe.findByIdAndUpdate({
+        _id: securityId
+    }, securityProps)
+        .then(() => Recipe.findById({ _id: securityId }))
+        .then((security) => res.status(202).json(security))
+        .catch(next);
 });
 
 routes.delete('/securitys/:id', function (req, res) {
