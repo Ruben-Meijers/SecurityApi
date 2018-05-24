@@ -58,12 +58,15 @@ routes.put('/securitys/:id', (req, res, next) => {
         .catch(next);
 });
 
-routes.delete('/securitys/:id', function (req, res) {
+routes.delete('/securitys/:id', (req, res, next) => {
+  const securityId = req.params.id;
 
-    Security.remove({"_id" :security._id})
-            .then( res.status(200).json('OK'))
-        .catch(res.status(400).json(error));
-    });
+  Security.remove({ _id: securityId })
+    .then(() => {
+        res.status(204).send();
+    })
+    .catch(next);
+});
 
 
 module.exports = routes;
